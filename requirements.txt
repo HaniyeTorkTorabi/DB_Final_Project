@@ -1,3 +1,8 @@
-pandas
-sqlalchemy
+fastapi
+uvicorn
 psycopg2-binary
+pydantic
+streamlit
+requests
+pandas
+python-dotenv

@@ -2,7 +2,7 @@ import urllib.parse
 
 # --- اطلاعات اتصال ---
 DB_USER = "postgres"
-DB_PASS = "@3084314"       # رمز عبور شما (با کاراکتر خاص @)
+DB_PASS = "@3084314"  # رمز عبور شما (با کاراکتر خاص @)
 DB_HOST = "localhost"
 DB_PORT = "5432"
 DB_NAME = "uber_project"

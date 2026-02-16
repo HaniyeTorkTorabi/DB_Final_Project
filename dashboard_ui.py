@@ -96,12 +96,9 @@ if pie:
         st.markdown("##### 🔸 دلایل دقیق لغو سفر")
         df_c = pd.DataFrame(pie['cancellations'])
         if not df_c.empty:
-            # ارتفاع 500 پیکسل برای بزرگ‌نمایی
+            # ✅ اینجا تغییر کرد: unified_cancellation_reason
             fig1 = px.pie(df_c, values='count', names='unified_cancellation_reason', hole=0.4,
-                          color_discrete_sequence=px.colors.sequential.RdBu,
-                          height=500)
-            fig1.update_traces(textposition='inside', textinfo='percent+label')
-            fig1.update_layout(legend=dict(orientation="h", y=-0.1))  # لجند پایین
+                          color_discrete_sequence=px.colors.sequential.RdBu)
             st.plotly_chart(fig1, use_container_width=True)
         else:
             st.info("داده‌ای برای لغو سفر در این بازه نیست.")

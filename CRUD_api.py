@@ -166,16 +166,55 @@ def create_ride(ride: RideCreateSchema):
 
 
 # ✅ UPDATE & DELETE (مشابه قبل)
+# در فایل CRUD_api.py جایگزین تابع update_status قبلی شود
+
 @app.put("/rides/{booking_id}")
 def update_status(booking_id: str, data: StatusUpdateSchema):
+    # لیست وضعیت‌هایی که یعنی "سفر انجام نشده"
+    cancelled_statuses = [
+        RideStatus.Cancelled_Customer.value,
+        RideStatus.Cancelled_Driver.value,
+        RideStatus.Incomplete.value,
+        RideStatus.No_Driver.value
+    ]
+
     with engine.connect() as conn:
-        res = conn.execute(text("UPDATE gold.dataset SET booking_status = :s WHERE booking_id = :b"),
-                           {"s": data.status.value, "b": booking_id.strip().replace('"', '')})
+        # پاک‌سازی شناسه
+        clean_bid = booking_id.strip().replace('"', '')
+
+        # منطق ۱: اگر وضعیت جدید "لغو" یا "ناقص" باشد
+        if data.status.value in cancelled_statuses:
+            # کوئری: وضعیت آپدیت شود + پول و مسافت صفر شوند + امتیاز حذف شود
+            query = text("""
+                UPDATE gold.dataset
+                SET booking_status = :s,
+                    booking_value = 0,
+                    ride_distance = 0,
+                    revenue_per_km = 0,
+                    driver_ratings = NULL,  -- امتیاز باید پوچ شود
+                    distance_category = 'N/A' -- دسته‌بندی مسافت دیگر معنی ندارد
+                WHERE booking_id = :b
+            """)
+
+        # منطق ۲: اگر وضعیت "Completed" باشد (یا تغییرات معمولی)
+        else:
+            # فقط وضعیت تغییر کند (چون نمی‌توانیم مقادیر قبلی را حدس بزنیم)
+            # نکته: در سیستم واقعی، اینجا باید مقادیر دوباره محاسبه شوند، اما برای پروژه شما همین کافیست.
+            query = text("UPDATE gold.dataset SET booking_status = :s WHERE booking_id = :b")
+
+        # اجرای کوئری
+        res = conn.execute(query, {"s": data.status.value, "b": clean_bid})
         conn.commit()
-        if res.rowcount == 0: raise HTTPException(status_code=404)
-    return {"message": "Updated"}
 
+        if res.rowcount == 0:
+            raise HTTPException(status_code=404, detail="Booking ID not found")
 
+    return {
+        "message": "Updated successfully",
+        "logic_applied": "Values reset to 0" if data.status.value in cancelled_statuses else "Status changed only"
+    }
+
+#------------
 @app.delete("/rides/{booking_id}")
 def delete_ride(booking_id: str):
     with engine.connect() as conn:

@@ -88,7 +88,13 @@ with tabs[1]:
 # --- UPDATE & DELETE ---
 with tabs[2]:
     ubid = st.text_input("Booking ID برای ویرایش:")
-    stat = st.selectbox("وضعیت جدید", ["Completed", "Cancelled by Customer", "Cancelled by Driver", "Incomplete"])
+    stat = st.selectbox("وضعیت جدید", [
+        "Completed",
+        "Cancelled by Customer",
+        "Cancelled by Driver",
+        "Incomplete",
+        "No Driver Found"
+    ])
     if st.button("بروزرسانی"):
         requests.put(f"{API_URL}/rides/{ubid}", json={"status": stat})
         st.success("انجام شد.")

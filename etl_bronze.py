@@ -1,6 +1,6 @@
 import pandas as pd
 from sqlalchemy import create_engine, text
-from db_config import CONNECTION_STR  # تنظیمات اتصال از فایل کانفیگ
+from db_config import CONNECTION_STR
 
 
 def run_bronze_etl():

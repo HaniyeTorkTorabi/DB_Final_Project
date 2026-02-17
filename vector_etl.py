@@ -13,7 +13,6 @@ def load_data_to_chroma():
     print("⏳ Connecting to PostgreSQL...")
     engine = create_engine(CONNECTION_STR)
 
-    # تغییر مهم: واکشی gold_record_id به جای فقط booking_id
     query = """
     SELECT gold_record_id, booking_id, unified_cancellation_reason 
     FROM gold.dataset 
@@ -25,7 +24,6 @@ def load_data_to_chroma():
 
     # حذف دیتابیس قبلی اگر خراب شده است
     if os.path.exists(CHROMA_PATH):
-        # این کار اختیاری است اما برای رفع خطاهای احتمالی خوب است
         pass
 
     print("⏳ Initializing ChromaDB...")
@@ -48,7 +46,6 @@ def load_data_to_chroma():
 
         documents = batch['unified_cancellation_reason'].tolist()
 
-        # تغییر مهم: استفاده از gold_record_id به عنوان شناسه یکتا
         # ChromaDB نیاز دارد ID حتما رشته (String) باشد
         ids = [str(x) for x in batch['gold_record_id'].tolist()]
 

@@ -57,7 +57,6 @@ def run_benchmark(label, connection):
 def main():
     try:
         with engine.connect() as conn:
-            # گام صفر: پاکسازی محیط (حذف ایندکس قبلی احتمالی)
             conn.execute(text(DROP_INDEX_SQL))
             conn.commit()
 

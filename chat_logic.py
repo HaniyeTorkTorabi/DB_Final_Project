@@ -31,7 +31,6 @@ Columns:
 - unified_cancellation_reason (VARCHAR)
 """
 
-# پرامپت اصلاح شده با قوانین سخت‌گیرانه برای سلام و احوال‌پرسی
 SYSTEM_PROMPT = f"""
 You are a PostgreSQL expert. Your mission is to convert English questions into SQL queries.
 

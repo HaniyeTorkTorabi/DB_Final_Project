@@ -45,7 +45,7 @@ def run_gold_etl():
         df["ride_distance"] > 0, df["booking_value"] / df["ride_distance"], 0
     ).round(2)
 
-    # 2. دسته‌بندی مسافت (Distance Category) - (بخش اصلاح شده)
+    # 2. دسته‌بندی مسافت (Distance Category)
     conditions = [
         (df["ride_distance"] <= 5),  # کوتاه
         (df["ride_distance"] > 5) & (df["ride_distance"] <= 15),  # متوسط
@@ -72,7 +72,6 @@ def run_gold_etl():
 
     # انتقال gold_record_id به ستون اول جدول
     cols = df.columns.tolist()
-    # حذف از ته لیست و اضافه کردن به سر لیست
     cols.insert(0, cols.pop(cols.index("gold_record_id")))
     df = df[cols]
 
@@ -81,13 +80,12 @@ def run_gold_etl():
 
     try:
         with engine.connect() as conn:
-            # ایجاد اسکیما و حذف جدول قبلی برای جلوگیری از تداخل
             conn.execute(text("CREATE SCHEMA IF NOT EXISTS gold;"))
             conn.execute(text("DROP TABLE IF EXISTS gold.dataset CASCADE;"))
             conn.commit()
 
         # ذخیره دیتافریم در دیتابیس
-        # نکته: index=False چون خودمان gold_record_id ساختیم
+        # index=False چون خودمان gold_record_id ساختیم
         df.to_sql("dataset", engine, schema="gold", if_exists="replace", index=False)
 
         print("در حال اعمال محدودیت‌های امنیتی (Constraints)...")

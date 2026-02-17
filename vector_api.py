@@ -30,13 +30,11 @@ def semantic_search(search: SearchQuery):
         if not results['ids'] or not results['ids'][0]:
             return {"message": "No similar records found.", "data": []}
 
-        # این IDها الان gold_record_id هستند (چون در ETL عوض کردیم)
         found_ids = results['ids'][0]
 
         # تبدیل به تاپل برای SQL
         ids_tuple = tuple(found_ids)
 
-        # تغییر مهم: کوئری زدن بر اساس gold_record_id
         if len(found_ids) == 1:
             sql_query = f"SELECT * FROM gold.dataset WHERE gold_record_id = {found_ids[0]}"
         else:

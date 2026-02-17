@@ -165,8 +165,7 @@ def create_ride(ride: RideCreateSchema):
         raise HTTPException(status_code=500, detail=str(e))
 
 
-# ✅ UPDATE & DELETE (مشابه قبل)
-# در فایل CRUD_api.py جایگزین تابع update_status قبلی شود
+# ✅ UPDATE & DELETE
 
 @app.put("/rides/{booking_id}")
 def update_status(booking_id: str, data: StatusUpdateSchema):
@@ -198,8 +197,6 @@ def update_status(booking_id: str, data: StatusUpdateSchema):
 
         # منطق ۲: اگر وضعیت "Completed" باشد (یا تغییرات معمولی)
         else:
-            # فقط وضعیت تغییر کند (چون نمی‌توانیم مقادیر قبلی را حدس بزنیم)
-            # نکته: در سیستم واقعی، اینجا باید مقادیر دوباره محاسبه شوند، اما برای پروژه شما همین کافیست.
             query = text("UPDATE gold.dataset SET booking_status = :s WHERE booking_id = :b")
 
         # اجرای کوئری

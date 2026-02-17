@@ -36,7 +36,3 @@ if prompt := st.chat_input("Ask about the data (e.g., 'Total value for Uber XL i
 
             # ذخیره در تاریخچه
             st.session_state.messages.append({"role": "assistant", "content": ai_sql})
-
-# نمایش یک تذکر کوچک در پایین صفحه
-st.sidebar.caption("Powered by OpenRouter & Gemini 2.0")
-st.sidebar.write("Step 7: Natural Language to SQL")
